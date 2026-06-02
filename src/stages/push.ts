@@ -3,6 +3,10 @@ import { exec } from "@actions/exec";
 
 import { saveStorePaths, getStorePaths, INTERNAL_DRY_RUN } from "../utils";
 
+function splitArgs(args: string): string[] {
+	return args.split(" ").filter((arg) => arg !== "");
+}
+
 export const push = async () => {
 	core.startGroup("Push to Attic");
 
@@ -13,6 +17,7 @@ export const push = async () => {
 			core.info("Pushing to cache is disabled by skip-push");
 		} else {
 			const cache = core.getInput("cache");
+			const pushArgs = splitArgs(core.getInput("push-args"));
 			core.info("Pushing to cache");
 
 			const oldPaths = await getStorePaths();
@@ -36,7 +41,7 @@ export const push = async () => {
 			}
 
 			if (!INTERNAL_DRY_RUN) {
-				await exec("attic", ["push", "--stdin", cache], {
+				await exec("attic", ["push", ...pushArgs, "--stdin", cache], {
 					input: Buffer.from(pushPaths.join("\n")),
 				});
 			} else {

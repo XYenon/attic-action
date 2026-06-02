@@ -16,11 +16,17 @@ inputs:
   inputs-from:
     description: "Path to get the Nixpkgs flake input from instead of `github:NixOS/nixpkgs/nixpkgs-unstable`"
     required: false
+  install-command:
+    description: "Custom command to install Attic instead of the default installation method"
+    required: false
   include-paths:
     description: "Regular expressions for matching paths to include when pushing (delimited by newlines)"
     required: false
   exclude-paths:
     description: "Regular expressions for matching paths to exclude when pushing (delimited by newlines)"
+    required: false
+  push-args:
+    description: "Additional command-line arguments to pass to `attic push`"
     required: false
   skip-push:
     description: "Disable pushing to the cache automatically"

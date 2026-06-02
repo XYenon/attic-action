@@ -7,10 +7,13 @@ export const install = async () => {
 
 	core.info("Installing Attic");
 
+	const installCommand = core.getInput("install-command");
 	const inputsFrom = core.getInput("inputs-from");
 
 	try {
-		if (inputsFrom) {
+		if (installCommand) {
+			await exec("bash", ["-c", installCommand]);
+		} else if (inputsFrom) {
 			await exec("nix", ["profile", "add", "--inputs-from", inputsFrom, "nixpkgs#attic-client"]);
 		} else {
 			await exec("nix", ["profile", "add", "github:NixOS/nixpkgs/nixpkgs-unstable#attic-client"]);
