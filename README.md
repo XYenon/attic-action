@@ -37,6 +37,10 @@ Path to get the Nixpkgs flake input from instead of `github:NixOS/nixpkgs/nixpkg
 
 Additional command-line arguments to pass to `attic push` (**optional**).
 
+### `push-max-retries`
+
+Maximum number of times to retry `attic push` when it exits with a non-zero status (**default is 0**).
+
 ### `skip-push`
 
 Disable pushing new derivations to the cache automatically at the end of the job (**default is false**).

@@ -38,9 +38,29 @@ export const push = async () => {
 			}
 
 			if (!INTERNAL_DRY_RUN) {
-				await exec("attic", ["push", ...pushArgs, "--stdin", cache], {
-					input: Buffer.from(pushPaths.join("\n")),
-				});
+				const maxRetries = Number.parseInt(core.getInput("push-max-retries") || "0", 10);
+				const pushInput = Buffer.from(pushPaths.join("\n"));
+
+				for (let attempt = 0; attempt <= maxRetries; attempt++) {
+					try {
+						if (attempt > 0) {
+							core.info(`Retrying push (attempt ${attempt + 1}/${maxRetries + 1})`);
+						}
+
+						await exec("attic", ["push", ...pushArgs, "--stdin", cache], {
+							input: pushInput,
+						});
+						break;
+					} catch (e) {
+						const exitCode = (e as { exitCode?: number }).exitCode;
+
+						if (attempt < maxRetries) {
+							core.warning(`Push failed (exit code ${exitCode ?? "unknown"}), retrying...`);
+						} else {
+							throw e;
+						}
+					}
+				}
 			} else {
 				console.log("Pushing paths", pushPaths);
 			}

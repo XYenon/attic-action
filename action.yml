@@ -25,6 +25,10 @@ inputs:
   push-args:
     description: "Additional command-line arguments to pass to `attic push`"
     required: false
+  push-max-retries:
+    description: "Maximum number of times to retry `attic push` when it exits with a non-zero status (default is 0)"
+    required: false
+    default: "0"
   skip-push:
     description: "Disable pushing to the cache automatically"
     required: false
